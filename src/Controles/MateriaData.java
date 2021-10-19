@@ -95,7 +95,7 @@ public class MateriaData {
     
     public Materia buscarMateria(int id){
         Materia mat=new Materia();
-        String sql="SELECT * FROM `materia` WHERE `idMateria`=?";
+        String sql="SELECT * FROM materia WHERE idMateria = ?";
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, id);

@@ -35,7 +35,7 @@ public class CursadaData {
     }
     
     public void guardarCursada(Cursada c){
-        String sql="INSERT INTO cursada (idAlumno,idMateria,nota) VALUES (?,?,?)";       
+        String sql="INSERT INTO cursada (idAlumno,idMateria,nota) VALUES ( ?, ?, ? )";       
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, c.getAlumno().getIdAlumno());
@@ -80,7 +80,7 @@ public class CursadaData {
     
     public Alumno buscarAlumno(int id){
         Alumno a = new Alumno(); 
-        String sql="SELECT a.idAlumno, a.nombre, a.apellido, a.legajo, a.fechaNac, a.activo FROM cursada AS c, alumno as a WHERE c.idAlumno=a.idAlumno and c.idAlumno=?";
+        String sql="SELECT a.idAlumno, a.nombre, a.apellido, a.legajo, a.fechaNac, a.activo FROM cursada AS c, alumno as a WHERE c.idAlumno=a.idAlumno and c.idAlumno = ?";
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, id);
@@ -163,11 +163,6 @@ public class CursadaData {
         }
         return lc;
         
-        /*  SELECT m.id_Materia, m.nombre, m.anio, m.estado
-            FROM cursada AS c, materia as m
-            WHERE c.id_Materia = c.id_Materia
-            AND id_Alumno=?;
-        */
     }
     
     public List <Materia> obtenerMateriasCursadas(int id){
@@ -215,7 +210,7 @@ public class CursadaData {
     public List <Alumno> buscarAlumnoPorMateriaCursada(int id){
         Alumno a;
         ArrayList <Alumno> la = new ArrayList<>();
-        String sql="SELECT a.idAlumno, a.nombre, a.apellido, a.legajo, a.fechaNac, a.activo FROM cursada AS c, alumno as a WHERE c.idAlumno=a.idAlumno and c.idMateria=?";
+        String sql="SELECT a.idAlumno, a.nombre, a.apellido, a.legajo, a.fechaNac, a.activo FROM cursada AS c, alumno as a WHERE c.idAlumno=a.idAlumno and c.idMateria = ?";
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, id);
@@ -237,7 +232,7 @@ public class CursadaData {
     } 
     public float buscarNotaCursada(int idA ,int idM){
        int resul=0; 
-       String sql="SELECT `nota` FROM `cursada` WHERE idAlumno=? and idMateria=?";     
+       String sql="SELECT nota FROM cursada WHERE idAlumno = ? and idMateria = ?";     
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, idA);

@@ -17,11 +17,11 @@ public class AlumnoData {
         try {
             this.con = connA.conectar();
         } catch (SQLException ex) {
-            Logger.getLogger(AlumnoData.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error de conexion en alumno data");
         }
     }
 public void guardarAlumno(Alumno a){
-    String sql = "INSERT INTO alumno(apellido, nombre, FechaNac, legajo, activo) VALUES (?,?,?,?,?)";
+    String sql = "INSERT INTO alumno(apellido, nombre, FechaNac, legajo, activo) VALUES ( ?, ?, ?, ?, ? )";
     
         try {
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

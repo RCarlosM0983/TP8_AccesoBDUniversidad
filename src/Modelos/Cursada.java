@@ -17,7 +17,7 @@ public class Cursada {
     private float nota;
     private boolean activo;
 
-    public Cursada(int iCursada, Alumno alumno, Materia materia, float nota, boolean activo) {
+    public Cursada(int idCursada, Alumno alumno, Materia materia, float nota, boolean activo) {
         this.idCursada = idCursada;
         this.alumno = alumno;
         this.materia = materia;
