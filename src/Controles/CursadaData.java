@@ -23,10 +23,10 @@ import javax.swing.JOptionPane;
  */
 public class CursadaData {
     
-     private Connection con; 
+     private Connection con = null; 
     
     public CursadaData(Conexion conn){
-        this.con =  conn.getConexion();
+        this.con =  conn.conectar();
         /*try {
             this.con =  conn.getConexion();
         }catch (SQLException ex) {
@@ -140,10 +140,34 @@ public class CursadaData {
         return lc;
     
     }
-    public List <Cursada> obtenerCursadasxAlumno(int id){
+    public ArrayList<Cursada> obtenerCursadasxAlumno(int id){
         ArrayList <Cursada> lc = new ArrayList<>();
         Cursada c;
         String sql="SELECT * FROM cursada WHERE idAlumno=?";
+        try {
+            PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1,id);
+            ResultSet rs= ps.executeQuery();
+            while(rs.next()){
+                c = new Cursada();
+                Alumno a = buscarAlumno(rs.getInt("idAlumno"));
+                Materia m = buscarMateria(rs.getInt("idMateria"));
+                c.setAlumno(a);
+                c.setMateria(m);
+                c.setNota(rs.getFloat("nota"));
+                c.setIdCursada(rs.getInt("idCursada"));
+                lc.add(c);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,"Error de conexion.");
+        }
+        return lc;
+        
+    }
+     public ArrayList<Cursada> obtenerCursadasxMateria(int id){
+        ArrayList <Cursada> lc = new ArrayList<>();
+        Cursada c;
+        String sql="SELECT * FROM cursada WHERE idMateria = ?";
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1,id);

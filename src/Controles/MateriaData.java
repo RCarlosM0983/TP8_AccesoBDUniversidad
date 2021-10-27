@@ -21,10 +21,15 @@ import javax.swing.JOptionPane;
  */
 public class MateriaData {
     
-    private Connection con;
+    private Connection con = null;
+
+    public MateriaData() {
+        
+    }
+    
     
     public MateriaData(Conexion conn){
-        this.con =  conn.getConexion();
+        this.con =  conn.conectar();
         /*try {
             this.con =  conn.getConexion();
         } catch (SQLException ex) {
@@ -45,6 +50,7 @@ public class MateriaData {
             
             if(rs.next()){
                 ma.setIdMateria(rs.getInt(1));
+                JOptionPane.showMessageDialog(null, "Materia guardada");
             }
             ps.close();
         } catch (SQLException ex) {
@@ -95,7 +101,7 @@ public class MateriaData {
     
     public Materia buscarMateria(int id){
         Materia mat=new Materia();
-        String sql="SELECT * FROM materia WHERE idMateria = ?";
+        String sql= "SELECT * FROM materia WHERE idMateria = ? ";
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, id);
@@ -139,7 +145,7 @@ public class MateriaData {
     
     public boolean materiaEsta(int id){
         boolean ret=false;
-        String sql="SELECT * FROM `materia` WHERE `idMateria`=?";
+        String sql="SELECT * FROM `materia` WHERE `idMateria`= ?";
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, id);
@@ -151,5 +157,18 @@ public class MateriaData {
             JOptionPane.showMessageDialog(null,"Error al buscar la materia en la base de datos");
         }
     return ret;
+    }
+    public void borrarMateria(int id){
+        String sql = "DELETE FROM materia WHERE idMateria = ?;";
+       try {
+      PreparedStatement ps = con.prepareStatement(sql);
+      ps.setInt(1, id);
+      if(ps.executeUpdate()>0){
+        JOptionPane.showMessageDialog(null, "Materia Eliminada");
+      }
+            ps.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar materia");
+        }
     }
 }

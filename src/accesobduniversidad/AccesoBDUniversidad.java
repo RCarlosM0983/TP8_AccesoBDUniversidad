@@ -7,8 +7,9 @@ package accesobduniversidad;
 
 import Controles.AlumnoData;
 import Controles.Conexion;
+import Controles.MateriaData;
 import Modelos.Alumno;
-import java.sql.SQLException;
+import Modelos.Materia;
 import java.time.LocalDate;
 
 /**
@@ -23,10 +24,16 @@ public class AccesoBDUniversidad {
     public static void main(String[] args){
       
         Conexion c = new Conexion();
-        Alumno a1 = new Alumno("miranda", "Carlos",LocalDate.of(1983, 8, 9), 1005, true);
+        Alumno a1 = new Alumno("Lopez", "Carlos",LocalDate.of(1983, 8, 9), 1006, true);
         AlumnoData ad = new AlumnoData(c);
         ad.guardarAlumno(a1);
+        MateriaData md = new MateriaData(c);
+        System.out.println((md.buscarMateria(19)).getNombreMateria());
+         Materia m = new Materia("matemáticas", 1, true);
+        // md.ingresarMateria(m);
         //System.out.println(ad.listarAlumnos());
+        md.borrarMateria(212);
+        System.out.println(ad.obtenerAlumnos());
     }
     
 }
