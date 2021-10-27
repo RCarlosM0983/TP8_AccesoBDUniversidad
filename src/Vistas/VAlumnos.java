@@ -261,7 +261,7 @@ public class VAlumnos extends javax.swing.JInternalFrame {
         jtfLegajo.setText("");
         jtfApellido.setText("");
         jtfNombre.setText("");
-        jdcFechaNac.setDateFormatString("");
+        jdcFechaNac.setCalendar(null);
         jbGuardar.setEnabled(false);
         jcbEstado.setEnabled(false);
     }//GEN-LAST:event_jbLimpiarActionPerformed
