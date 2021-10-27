@@ -77,7 +77,7 @@ public class MateriaData {
             
             ps.setString(1, ma.getNombreMateria());
             ps.setInt(2,ma.getAnio());
-            //ps.setInt(3,ma.getIdMateria());
+            ps.setInt(3,ma.getIdMateria());
             
             if (ps.executeUpdate() > 0){
                 JOptionPane.showInternalMessageDialog(null, "Materia actualizada correctamente");

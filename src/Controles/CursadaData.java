@@ -43,6 +43,7 @@ public class CursadaData {
             JOptionPane.showMessageDialog(null,"Error de conexion.");
         }  
     }
+    
     public void borrarCursadaDeUnaMateria(int idA, int idM){
         String sql="DELETE FROM cursada WHERE idAlumno = ? AND idMateria = ?";     
         try {
@@ -55,6 +56,7 @@ public class CursadaData {
             JOptionPane.showMessageDialog(null,"Error de conexion.");
         }
     }
+    
     public void actualizarNotaCursada(int idC, float nota){
         String sql="UPDATE cursada SET nota = ? WHERE idCursada = ? ";     
         try {
@@ -132,6 +134,7 @@ public class CursadaData {
         return lc;
     
     }
+    
     public List <Cursada> obtenerCursadasxAlumno(int id){
         ArrayList <Cursada> lc = new ArrayList<>();
         Cursada c;

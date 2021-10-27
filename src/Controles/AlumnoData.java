@@ -116,7 +116,7 @@ import javax.swing.JOptionPane;
             
             PreparedStatement ps = con.prepareStatement(sql);
             
-            //ps.setInt(6, a.getIdAlumno());
+            ps.setInt(6, a.getIdAlumno());
             ps.setString(1, a.getApellido());
             ps.setString(2, a.getNombre());
             ps.setDate(3, Date.valueOf(a.getFechaNac()));
