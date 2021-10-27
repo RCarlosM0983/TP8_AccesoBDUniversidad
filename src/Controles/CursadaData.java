@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controles;
 
 import Modelos.Alumno;
@@ -17,16 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author carlo_000
- */
 public class CursadaData {
     
-     private Connection con; 
+     private Connection con = null; 
     
     public CursadaData(Conexion conn){
-        this.con =  conn.getConexion();
+        this.con =  conn.conectar();
         /*try {
             this.con =  conn.getConexion();
         }catch (SQLException ex) {
@@ -64,13 +55,13 @@ public class CursadaData {
             JOptionPane.showMessageDialog(null,"Error de conexion.");
         }
     }
-    public void actualizarNotaCursada(int idA ,int idM, float nota){
-        String sql="UPDATE cursada SET nota = ? WHERE idAlumno = ? AND idMateria = ?";     
+    public void actualizarNotaCursada(int idC, float nota){
+        String sql="UPDATE cursada SET nota = ? WHERE idCursada = ? ";     
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setFloat(1, nota);
-            ps.setInt(2, idA);
-            ps.setInt(3, idM);
+            ps.setInt(2, idC);
+       
             ps.executeUpdate();
             ps.close();
         } catch (SQLException ex) {
@@ -98,6 +89,7 @@ public class CursadaData {
         }
         return a;
     }
+    
     public Materia buscarMateria(int id){
         Materia m = new Materia(); 
         String sql="SELECT m.idMateria, m.nombre, m.anio, m.activo FROM cursada AS c, materia as m WHERE m.idMateria=c.idMateria and m.idMateria=?;";
@@ -186,6 +178,7 @@ public class CursadaData {
         }
         return lm;
     }
+    
     public List <Materia> obtenerMateriasNOCursadas(int id){
         ArrayList <Materia> lm = new ArrayList<>();
         Materia m;
@@ -207,6 +200,7 @@ public class CursadaData {
         }
         return lm;
     }
+    
     public List <Alumno> buscarAlumnoPorMateriaCursada(int id){
         Alumno a;
         ArrayList <Alumno> la = new ArrayList<>();
@@ -230,6 +224,7 @@ public class CursadaData {
         }
         return la;
     } 
+    
     public float buscarNotaCursada(int idA ,int idM){
        int resul=0; 
        String sql="SELECT nota FROM cursada WHERE idAlumno = ? and idMateria = ?";     

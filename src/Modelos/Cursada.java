@@ -11,7 +11,7 @@ package Modelos;
  */
 public class Cursada {
     
-    private int idCursada;
+    private int idCursada=-1;
     private Alumno alumno;
     private Materia materia;
     private float nota;

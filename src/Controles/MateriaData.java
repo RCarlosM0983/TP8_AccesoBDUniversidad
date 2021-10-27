@@ -6,6 +6,7 @@
 package Controles;
 
 import Modelos.Materia;
+import java.sql.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,30 +22,31 @@ import javax.swing.JOptionPane;
  */
 public class MateriaData {
     
-    private Connection con;
+    private Connection con = null;
     
     public MateriaData(Conexion conn){
-        this.con =  conn.getConexion();
-        /*try {
-            this.con =  conn.getConexion();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null,"error de conexion");
-        }*/
+        this.con =  conn.conectar();
     }
     
     public void ingresarMateria(Materia ma){
-        String sql="INSERT INTO materia (idMateria,nombre,anio,activo) VALUES (?,?,?,?)";       
+        
+        String sql="INSERT INTO materia (nombre,anio,activo) VALUES ( ? , ? , ? )";       
+        
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1,ma.getIdMateria());
-            ps.setString(2, ma.getNombreMateria());
-            ps.setInt(3, ma.getAnio());
-            ps.setBoolean(4, ma.isActivo());
+            
+            //ps.setInt(1,ma.getIdMateria());
+            ps.setString(1, ma.getNombreMateria());
+            ps.setInt(2, ma.getAnio());
+            ps.setBoolean(3, ma.isActivo());
+            
             ps.executeUpdate();
+            
             ResultSet rs=ps.getGeneratedKeys();
             
             if(rs.next()){
                 ma.setIdMateria(rs.getInt(1));
+                JOptionPane.showMessageDialog(null, "Materia guardada");
             }
             ps.close();
         } catch (SQLException ex) {
@@ -66,15 +68,16 @@ public class MateriaData {
             JOptionPane.showMessageDialog(null,"Error al modificar el estado de la materia en la base de datos.");
         }
     }
+    
     public void actualizarMateria (Materia ma){
         String sql="UPDATE materia SET nombre = ?, anio = ? WHERE idMateria = ?";
         
         try {
-            PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);            
             
-            ps.setInt(3,ma.getIdMateria());
             ps.setString(1, ma.getNombreMateria());
             ps.setInt(2,ma.getAnio());
+            //ps.setInt(3,ma.getIdMateria());
             
             if (ps.executeUpdate() > 0){
                 JOptionPane.showInternalMessageDialog(null, "Materia actualizada correctamente");
@@ -95,7 +98,7 @@ public class MateriaData {
     
     public Materia buscarMateria(int id){
         Materia mat=new Materia();
-        String sql="SELECT * FROM materia WHERE idMateria = ?";
+        String sql= "SELECT * FROM materia WHERE idMateria = ? ";
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, id);
@@ -112,6 +115,7 @@ public class MateriaData {
         }
         return mat;
     }
+    
     public List<Materia> obtenerMaterias(){
         Materia mat;
         ArrayList<Materia> materias=new ArrayList<>();
@@ -139,7 +143,7 @@ public class MateriaData {
     
     public boolean materiaEsta(int id){
         boolean ret=false;
-        String sql="SELECT * FROM `materia` WHERE `idMateria`=?";
+        String sql="SELECT * FROM `materia` WHERE `idMateria`= ?";
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, id);
@@ -151,5 +155,19 @@ public class MateriaData {
             JOptionPane.showMessageDialog(null,"Error al buscar la materia en la base de datos");
         }
     return ret;
+    }
+    
+    public void borrarMateria(int id){
+        String sql = "DELETE FROM materia WHERE idMateria = ?;";
+       try {
+      PreparedStatement ps = con.prepareStatement(sql);
+      ps.setInt(1, id);
+      if(ps.executeUpdate()>0){
+        JOptionPane.showMessageDialog(null, "Materia Eliminada");
+      }
+            ps.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar materia");
+        }
     }
 }
