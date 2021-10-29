@@ -231,6 +231,7 @@ public class VAlumnos extends javax.swing.JInternalFrame {
 
        int id = Integer.parseInt(jtfIdAlumno.getText());
        Alumno a = alumnoData.buscarAlumno(id);
+       jcbEstado.setEnabled(true);
        
         if (a !=null) {  
             jtfIdAlumno.setText(a.getIdAlumno()+"");
@@ -266,7 +267,7 @@ public class VAlumnos extends javax.swing.JInternalFrame {
         jtfNombre.setText("");
         jdcFechaNac.setCalendar(null);
         jbGuardar.setEnabled(false);
-        jcbEstado.setEnabled(false);
+        jcbEstado.setSelected(false);
     }//GEN-LAST:event_jbLimpiarActionPerformed
 
     private void jbBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarActionPerformed
@@ -278,8 +279,16 @@ public class VAlumnos extends javax.swing.JInternalFrame {
     private void jbActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbActualizarActionPerformed
 
         if(jtfIdAlumno.getText() !=null){
-            //int id = Integer.parseInt(jtfIdAlumno.getText());
-            
+            //        Conexion c = new Conexion();
+        //AlumnoData ad = new AlumnoData(c);
+        int id = Integer.parseInt(jtfIdAlumno.getText());
+        String ap = jtfApellido.getText();
+        String nombre = jtfNombre.getText();
+        int legajo = Integer.parseInt(jtfLegajo.getText());
+        LocalDate fecha = Instant.ofEpochMilli((jdcFechaNac.getDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+        Alumno a = new Alumno(id, ap, nombre, fecha, legajo, jcbEstado.isSelected());
+        alumnoData.actualizarAlumno(a);
+            /*
             String ap = jtfApellido.getText();
             String nombre = jtfNombre.getText();
             int legajo = Integer.parseInt(jtfLegajo.getText());
@@ -289,7 +298,8 @@ public class VAlumnos extends javax.swing.JInternalFrame {
             
             Alumno a = new Alumno(ap, nombre, fecha, legajo, activo);
             alumnoData.actualizarAlumno(a);
-        jcbEstado.setEnabled(false);
+             */
+        //jcbEstado.setEnabled(false);
         }
     }//GEN-LAST:event_jbActualizarActionPerformed
 
