@@ -10,7 +10,10 @@ import Controles.Conexion;
 import Controles.MateriaData;
 import Modelos.Alumno;
 import Modelos.Materia;
+import Vistas.VInscripcion;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,7 +25,7 @@ public class AccesoBDUniversidad {
      * @param args the command line arguments
      */
     public static void main(String[] args){
-      
+      try{
         Conexion c = new Conexion();
         Alumno a1 = new Alumno("Lopez", "Carlos",LocalDate.of(1983, 8, 9), 1006, true);
         AlumnoData ad = new AlumnoData(c);
@@ -34,6 +37,11 @@ public class AccesoBDUniversidad {
         //System.out.println(ad.listarAlumnos());
         md.borrarMateria(212);
         System.out.println(ad.obtenerAlumnos());
+    
+    }catch (ClassNotFoundException ex) {
+        Logger.getLogger(AccesoBDUniversidad.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
     }
     
 }

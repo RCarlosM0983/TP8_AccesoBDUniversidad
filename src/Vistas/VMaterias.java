@@ -3,6 +3,8 @@ package Vistas;
 import Controles.Conexion;
 import Controles.MateriaData;
 import Modelos.Materia;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class VMaterias extends javax.swing.JInternalFrame {
@@ -10,9 +12,14 @@ public class VMaterias extends javax.swing.JInternalFrame {
     private Conexion c;
 
     public VMaterias() {
-        initComponents();
-        c=new Conexion();
-        md =new MateriaData(c);
+        
+        try {
+             initComponents();
+             c = new Conexion("jdbc:mysql://localhost/universidadg3","root","");
+             md = new MateriaData(c);
+         } catch (ClassNotFoundException ex) {
+             Logger.getLogger(VAlumnos.class.getName()).log(Level.SEVERE, null, ex);
+         }
     }
 
     @SuppressWarnings("unchecked")
@@ -197,7 +204,7 @@ public class VMaterias extends javax.swing.JInternalFrame {
         jtfCodigo.setText("");
         jtfNombre.setText("");
         jtfAnio.setText("");
-        jcbEstado.isEnabled();
+        jcbEstado.setSelected(false);
     }//GEN-LAST:event_jbLimpiarActionPerformed
 
     private void jbBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBorrarActionPerformed
@@ -215,12 +222,18 @@ public class VMaterias extends javax.swing.JInternalFrame {
         
         if(jtfCodigo.getText() !=null){            
             
-            String materia = jtfNombre.getText();
-            
-            boolean activo=jcbEstado.isEnabled();
+            String materia = jtfNombre.getText(); 
             int anio = Integer.parseInt(jtfAnio.getText());
+            boolean activo = jcbEstado.isSelected();
+            /*    
+            if (jcbEstado.isSelected()) {
+                    materia.setActivo(true);
+                } else {
+                    m.setActivo(false);
+                }
+            */
             Materia m = new Materia(materia, anio, activo);
-            
+                  
             md.actualizarMateria(m);        
         }        
     }//GEN-LAST:event_jbActualizarActionPerformed

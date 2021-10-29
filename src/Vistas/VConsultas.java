@@ -26,6 +26,7 @@ public class VConsultas extends javax.swing.JInternalFrame {
 
     public VConsultas() {
         initComponents();
+        try {
         conexion=new Conexion();
         modelo=new DefaultTableModel();
         
@@ -41,6 +42,10 @@ public class VConsultas extends javax.swing.JInternalFrame {
         cargarMaterias();
         armaCabeceraTabla();
         cargarDatos();
+        } catch (ClassNotFoundException ex) {
+            System.out.println("error" + ex);
+        }
+        
     }
 
     /**

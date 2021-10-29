@@ -10,30 +10,41 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class CursadaData {
     
      private Connection con = null; 
+     Conexion conexion;
     
-    public CursadaData(Conexion conn){
-        this.con =  conn.conectar();
-        /*try {
-            this.con =  conn.getConexion();
-        }catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null,"Error de conexion.");
-        }*/
+    public CursadaData(Conexion conexion){
+        try {
+            this.conexion = new Conexion();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CursadaData.class.getName()).log(Level.SEVERE, null, ex);
+        }
+  
+        try {
+            con = conexion.getConexion();
+            
+        } catch (SQLException ex) {
+            System.out.println("Error en la conexion ");
+        }
     }
     
     public void guardarCursada(Cursada c){
-        String sql="INSERT INTO cursada (idAlumno,idMateria,nota) VALUES ( ?, ?, ? )";       
+        String sql="INSERT INTO cursada (idAlumno , idMateria , nota) VALUES ( ? , ? , ? )";       
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, c.getAlumno().getIdAlumno());
             ps.setInt(2, c.getMateria().getIdMateria());
             ps.setFloat(3, c.getNota());
-            ps.executeUpdate();
+            
+            ps.executeUpdate();            
             ResultSet rs=ps.getGeneratedKeys();
+            
             if(rs.next()){
                 c.setIdCursada(rs.getInt(1));
                 JOptionPane.showMessageDialog(null,"Inscripcion exitosa");
@@ -115,6 +126,7 @@ public class CursadaData {
         ArrayList <Cursada> lc = new ArrayList<>();
         Cursada c;
         String sql="SELECT * FROM cursada";
+        
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ResultSet rs= ps.executeQuery();
@@ -124,7 +136,7 @@ public class CursadaData {
                 Materia m = buscarMateria(rs.getInt("idMateria"));
                 c.setAlumno(a);
                 c.setMateria(m);
-                c.setNota(rs.getInt("nota"));
+                c.setNota(rs.getFloat("nota"));
                 c.setIdCursada(rs.getInt("idCursada"));
                 lc.add(c);
             }

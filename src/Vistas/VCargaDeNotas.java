@@ -25,6 +25,7 @@ public class VCargaDeNotas extends javax.swing.JInternalFrame {
     public VCargaDeNotas() {
        
         initComponents();
+        try{
         conexion=new Conexion();
         modelo=new DefaultTableModel();
         
@@ -40,10 +41,13 @@ public class VCargaDeNotas extends javax.swing.JInternalFrame {
         for(Alumno item:listaAlumnos){
             jcbAlumno.addItem(item);            
         }
-     
+        cargarAlumnos();
         armarCabecera();
         borrarFilasT();
         cargarTabla();
+        } catch (ClassNotFoundException ex) {
+            System.out.println("error Vista Cargar Notas " + ex);
+        }
         
     }
      private void armarCabecera(){
@@ -202,16 +206,19 @@ public class VCargaDeNotas extends javax.swing.JInternalFrame {
         
         int filaSeleccionada=jtCargaNotas.getSelectedRow();
             if (filaSeleccionada!=-1){
-                Alumno a=(Alumno)jcbAlumno.getSelectedItem();
-                Cursada c=new Cursada();
-                int idMateria=(Integer)modelo.getValueAt(filaSeleccionada,0);
+        //        Alumno a=(Alumno)jcbAlumno.getSelectedItem();
+          //      Cursada c=new Cursada();
+            //    int idMateria=(Integer)modelo.getValueAt(filaSeleccionada,0);
+             //   int nota=Integer.valueOf((String)modelo.getValueAt(filaSeleccionada,2));
                 
-                int nota=Integer.valueOf((String)modelo.getValueAt(filaSeleccionada,2));
-                
+             String id =jtCargaNotas.getValueAt(filaSeleccionada, 0).toString();
+             String nota = jtCargaNotas.getValueAt(filaSeleccionada, 2).toString();
+             
                 CursadaData cd = new CursadaData(conexion);
                 
-                cd.actualizarNotaCursada(c.getIdCursada(),nota);
-                JOptionPane.showMessageDialog(null, "Nota modificada");
+            //    cd.actualizarNotaCursada(c.getIdCursada(),nota);
+             cd.actualizarNotaCursada(Integer.parseInt(id), Float.parseFloat(nota)); 
+            JOptionPane.showMessageDialog(null, "Nota modificada");
                 borrarFilasT();                
             }           
     }//GEN-LAST:event_jbnGuardarActionPerformed

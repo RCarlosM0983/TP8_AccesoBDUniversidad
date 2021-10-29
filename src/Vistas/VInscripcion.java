@@ -12,6 +12,8 @@ import Modelos.Alumno;
 import Modelos.Cursada;
 import Modelos.Materia;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,24 +25,32 @@ public class VInscripcion extends javax.swing.JInternalFrame {
  
     private DefaultTableModel modelo;
     private ArrayList<Materia>listaMaterias;
-    
-    /**
-     * Creates new form VInscripcion
-     */
-    
-
-  
-
+     private ArrayList <Alumno> listaAlumnos;
+ 
+////////////////////////////////////////////////////////////
     public VInscripcion() {
         initComponents();
+    try{
         Conexion c = new Conexion();
-        AlumnoData aData = new AlumnoData(c);
-        
-        this.cargarAlumnos();
-        
         modelo = new DefaultTableModel();
+        AlumnoData aData = new AlumnoData(c);        
+        listaAlumnos = (ArrayList)aData.obtenerAlumnos();
+        
+        cargarAlumnos();        
+        
         armarCabecera();
+        
+    }catch (ClassNotFoundException ex) {
+        Logger.getLogger(VInscripcion.class.getName()).log(Level.SEVERE, null, ex);
     }
+   // desactivarBotones();
+    }
+    
+    public void desactivarBotones(){
+    jbAnular.setEnabled(false);
+    jbInscribir.setEnabled(false);
+    // DESACTICO LOS BOTONES
+}
     private void armarCabecera(){
         ArrayList<Object>columnas = new ArrayList<>();
         columnas.add("ID");
@@ -52,10 +62,10 @@ public class VInscripcion extends javax.swing.JInternalFrame {
         jtInscriptas.setModel(modelo);
     }
       public void cargarAlumnos(){
-          Conexion c = new Conexion();
-          AlumnoData aData = new AlumnoData(c);
-          ArrayList<Alumno>lista = (ArrayList)aData.obtenerAlumnos();
-          for(Alumno alumno: lista){
+    //      Conexion c = new Conexion();
+      //    AlumnoData aData = new AlumnoData(c);
+        //  ArrayList<Alumno>lista = (ArrayList)aData.obtenerAlumnos();
+          for(Alumno alumno: listaAlumnos){
               jcbAlumno.addItem(alumno);
           }
       }
@@ -256,6 +266,7 @@ public class VInscripcion extends javax.swing.JInternalFrame {
 
     private void jbInscribirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbInscribirActionPerformed
         // TODO add your handling code here:
+       try {
         int filaSelec = jtInscriptas.getSelectedRow();
         Conexion con = new Conexion();
         
@@ -271,10 +282,14 @@ public class VInscripcion extends javax.swing.JInternalFrame {
             cd.guardarCursada(c);
             borrarFilasT();
         }
+       } catch (ClassNotFoundException ex) {
+        Logger.getLogger(VInscripcion.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }//GEN-LAST:event_jbInscribirActionPerformed
 
     private void jbAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAnularActionPerformed
         // TODO add your handling code here:
+        try{
          int filaSelec = jtInscriptas.getSelectedRow();
         Conexion con = new Conexion();
         
@@ -287,6 +302,9 @@ public class VInscripcion extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Inscripción anulada");
             borrarFilasT();
         }
+        }catch (ClassNotFoundException ex) {
+        Logger.getLogger(VInscripcion.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }//GEN-LAST:event_jbAnularActionPerformed
 public void borrarFilasT(){
     int a = modelo.getRowCount()-1;
@@ -295,6 +313,7 @@ public void borrarFilasT(){
     }
 }
 private void cargarInscriptas(){
+    try{
     borrarFilasT();
     Conexion c = new Conexion();
     CursadaData cd = new CursadaData(c);
@@ -304,8 +323,12 @@ private void cargarInscriptas(){
     for(Materia m: listaMaterias){
         modelo.addRow(new Object[]{m.getIdMateria(), m.getNombreMateria(), m.getAnio()});
     }
+    }catch (ClassNotFoundException ex) {
+        Logger.getLogger(VInscripcion.class.getName()).log(Level.SEVERE, null, ex);
+    }
 }
 public void cargarNoInscriptas(){
+    try{
     borrarFilasT();
     Conexion c = new Conexion();
     CursadaData cd = new CursadaData(c);
@@ -314,6 +337,9 @@ public void cargarNoInscriptas(){
     
     for(Materia m: listaMaterias){
         modelo.addRow(new Object[]{m.getIdMateria(), m.getNombreMateria(), m.getAnio()});
+    }
+    }catch (ClassNotFoundException ex) {
+        Logger.getLogger(VInscripcion.class.getName()).log(Level.SEVERE, null, ex);
     }
 }
 

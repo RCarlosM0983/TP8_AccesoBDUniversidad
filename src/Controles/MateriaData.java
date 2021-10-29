@@ -22,10 +22,15 @@ import javax.swing.JOptionPane;
  */
 public class MateriaData {
     
-    private Connection con = null;
+    private Connection con;
     
     public MateriaData(Conexion conn){
-        this.con =  conn.conectar();
+                try {
+            con = conn.getConexion();
+            
+        } catch (SQLException ex) {
+            System.out.println("Error en la conexion ");
+        }
     }
     
     public void ingresarMateria(Materia ma){
@@ -70,29 +75,32 @@ public class MateriaData {
     }
     
     public void actualizarMateria (Materia ma){
-        String sql="UPDATE materia SET nombre = ?, anio = ? WHERE idMateria = ?";
+        String sql="UPDATE materia SET nombre = ?, anio = ?, activo = ? WHERE idMateria = ?";
         
         try {
             PreparedStatement ps= con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);            
             
             ps.setString(1, ma.getNombreMateria());
             ps.setInt(2,ma.getAnio());
-            ps.setInt(3,ma.getIdMateria());
+            ps.setBoolean(3,ma.isActivo());
             
+            /*
             if (ps.executeUpdate() > 0){
                 JOptionPane.showInternalMessageDialog(null, "Materia actualizada correctamente");
             }else{
                 JOptionPane.showInternalMessageDialog(null, "Error en la carga de la Materia");
-            }
+            }*/
+            ps.setInt(4,ma.getIdMateria() );
+            ps.executeUpdate();
             
-            ResultSet rs=ps.getGeneratedKeys();
+            //ResultSet rs=ps.getGeneratedKeys();
             
-            if(rs.next())
-                ma.setIdMateria(rs.getInt(1));
+           // if(rs.next())
+             //   ma.setIdMateria(rs.getInt(1));
             ps.close();
             
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null,"Error al actualizar la materia en la base de datos");
+            JOptionPane.showMessageDialog(null,"Error al actualizar la materia en la base de datos"+ex);
         }
     }
     

@@ -6,13 +6,27 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
   public class AlumnoData {
-    private Connection con = null;
+    private Connection con;
   
-  public AlumnoData(Conexion connA){
+  public AlumnoData(Conexion conexion){
       
-        this.con = connA.conectar();
+        
+        try {
+            con = conexion.getConexion();
+            
+        } catch (SQLException ex) {
+            System.out.println("Error en la conexion ");
+        }
+    
     }
   
   public void guardarAlumno(Alumno a){
@@ -23,7 +37,8 @@ import javax.swing.JOptionPane;
             
             ps.setString(1, a.getApellido());
             ps.setString(2, a.getNombre());
-            ps.setDate(3, Date.valueOf(a.getFechaNac()));
+            //ps.setDate(3, a.getFechaNac());
+            ps.setDate(3,  Date.valueOf(a.getFechaNac()));
             ps.setInt(4, a.getLegajo());
             ps.setBoolean(5, a.isActivo());
             
@@ -37,7 +52,7 @@ import javax.swing.JOptionPane;
             ps.close();
             
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "No se pudo guardar el alumno");
+            JOptionPane.showMessageDialog(null, "No se pudo guardar el alumno "+ex);
         }
     }
 
@@ -60,6 +75,9 @@ import javax.swing.JOptionPane;
                 a.setIdAlumno(rs.getInt("idAlumno"));
                 alumnos.add(a);
             }
+            
+            ps.close();
+            
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null,"Error de conexion.");
         }
@@ -68,7 +86,7 @@ import javax.swing.JOptionPane;
    
   public Alumno buscarAlumno(int idAlumno){
       Alumno a = null;
-      String sql = "SELECT * FROM alumno WHERE idAlumno = ? AND activo = true ";
+      String sql = "SELECT * FROM alumno WHERE idAlumno = ? ";
       
     PreparedStatement ps;
         try {
@@ -98,9 +116,13 @@ import javax.swing.JOptionPane;
   
   public void borrarAlumno(int idAlumno){
       String sql = "UPDATE alumno SET activo = false WHERE idAlumno = ?";
-       try {
-      PreparedStatement ps = con.prepareStatement(sql);
-      ps.setInt(1, idAlumno);
+    
+      try {
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, idAlumno);
+        
+         ResultSet rs =ps.executeQuery();
+        
       if(ps.executeUpdate()>0){
         JOptionPane.showMessageDialog(null, "Alumno borrado");
       }
@@ -114,17 +136,23 @@ import javax.swing.JOptionPane;
         try {
             String sql = "UPDATE alumno SET apellido = ?, nombre = ?, fechaNac = ?, legajo = ?, activo = ? WHERE idAlumno = ?";
             
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             
-            ps.setInt(6, a.getIdAlumno());
+            
             ps.setString(1, a.getApellido());
             ps.setString(2, a.getNombre());
+            //ps.setDate(3, a.getFechaNac().toLocalDate());
             ps.setDate(3, Date.valueOf(a.getFechaNac()));
             ps.setInt(4, a.getLegajo());
             ps.setBoolean(5, a.isActivo());
+            ps.setInt(6, a.getIdAlumno());
+            
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
             
            if(ps.executeUpdate()>0){
         JOptionPane.showMessageDialog(null, "Alumno actualizado");
+        
       }else{
               JOptionPane.showMessageDialog(null, "El alumno no existe"); 
            }

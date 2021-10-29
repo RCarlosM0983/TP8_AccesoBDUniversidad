@@ -21,10 +21,13 @@ public class VAlumnos extends javax.swing.JInternalFrame {
     private Conexion conexion;
     
     public VAlumnos() {
+        try{
         initComponents();
         conexion=new Conexion();
         alumnoData=new AlumnoData(conexion);
-
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(VAlumnos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -234,6 +237,7 @@ public class VAlumnos extends javax.swing.JInternalFrame {
             jtfNombre.setText(a.getNombre());
             jtfLegajo.setText(a.getLegajo()+"");
             jtfApellido.setText(a.getApellido());
+            //jdcFechaNac.setDate(a.getFechaNac());
             jdcFechaNac.setDate(Date.valueOf(a.getFechaNac()));
             jcbEstado.setSelected(a.isActivo());
         }
@@ -244,10 +248,9 @@ public class VAlumnos extends javax.swing.JInternalFrame {
        String nombre = jtfNombre.getText();
        String apellido = jtfApellido.getText();
        int legajo = Integer.parseInt(jtfLegajo.getText());
-      // LocalDate fechaNac = LocalDate.parse(jdcFechaNac.getDate(),DateTimeFormatter.ofPattern(""));
        LocalDate fechaNac = Instant.ofEpochMilli((jdcFechaNac.getDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+       //LocalDate fechaNac=  LocalDate.parse(jdcFechaNac.getText(),DateTimeFormatter.ofPattern("dd/MM/yyy"));      
        boolean activo=jcbEstado.isEnabled();
-      
        Alumno a = new Alumno(apellido, nombre, fechaNac, legajo, activo);
        
        alumnoData.guardarAlumno(a);
@@ -280,12 +283,13 @@ public class VAlumnos extends javax.swing.JInternalFrame {
             String ap = jtfApellido.getText();
             String nombre = jtfNombre.getText();
             int legajo = Integer.parseInt(jtfLegajo.getText());
+           // LocalDate fecha = Instant.ofEpochMilli((jdcFechaNac.getDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate fecha = Instant.ofEpochMilli((jdcFechaNac.getDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
             boolean activo=jcbEstado.isEnabled();
             
             Alumno a = new Alumno(ap, nombre, fecha, legajo, activo);
             alumnoData.actualizarAlumno(a);
-        
+        jcbEstado.setEnabled(false);
         }
     }//GEN-LAST:event_jbActualizarActionPerformed
 
